@@ -1,0 +1,6 @@
+Hejsan
+svejsan
+på
+digsan
+// f: Function that does nothing yet
+// p: n - the number of things
