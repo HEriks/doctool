@@ -7,9 +7,9 @@ numFunc = 0
 print("--- Functions ---")
 for x in f:
     x = x.strip()
-    
     if len(x) > 1:
-        if ((x[0] == '/') & (x[1] == '/')):
+        # print(x[:2])
+        if (x[:2] == "//"):
             if ('f:' in x):
                 print("Line " + str(line) + ":")
                 print(x[2:])
