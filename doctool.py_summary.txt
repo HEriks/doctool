@@ -1,0 +1,29 @@
+--- Functions ---
+Line 10: docu
+Despcription: Summarises the selected document
+Complexity:  O(n)
+Output:  a list with the number of lines and number of documented functions
+
+Line 40: docuFile
+Despcription: Like "docu()" but writes to a file instead
+Extra info:  Only runs when user has selected to get a file output from the program
+
+Line 71: summarise
+Despcription: Summarises the document in a very basic way. Has to be run _after_ "docu()"
+Parameters:  info - a list with the info gathered from "docu()"
+Complexity:  O(1)
+Output:  None
+Extra info:  Can't be run alone in order to keep the complexity down (Counting number of lines is O(n) and is already done once)
+
+Line 82: summariseFile
+Despcription: like "summarise" but instead appends results to a file
+Extra info:  only runs when user has selected to get a file output
+
+Line 119: nothingFunc ***TEST***
+Despcription: Function that does nothing
+Parameters:  None
+Complexity: O(1)
+
+--- Summary ---
+Number of lines: 123
+Number of documented functions: 5

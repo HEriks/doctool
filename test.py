@@ -1,4 +1,7 @@
 import sys
+f = open("faf.txt","w+")
+f.write("Hej")
+f.close
 print("Welcome, this tool will help you to quickly generate a short summary of your programs")
 userInput = input("Please enter the search path of your file (including file ending)")
 f = open(userInput, "r")
