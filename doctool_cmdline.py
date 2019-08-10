@@ -1,90 +1,25 @@
 import sys
 import os
-from tkinter import *
-from tkinter import filedialog
-from tkinter.ttk import *
-
 # Explanation of keycharacters:
 # - f: Function name
 # - d: Function description
 # - p: Parameters
 # - c: Complexity
 # - o: Output
-
-# GUI
-
-#Create the window
-wd = Tk()
-wd.title("doctool")
-wd.geometry('450x100')
-
-lb1 = Label(wd, text="Please select which file you want to document", anchor="nw")
-lb1.grid(column = 0, row = 0, sticky = W)
-
-# f: browse
-# d: Lets the user select the desired file
-def browse():
-    global fn
-    fn = filedialog.askopenfilename()
-    print(fn) #For debugging purposes
-
-btn = Button(wd, text = "Browse", command = browse)
-btn.grid(column = 1, row = 0, sticky = W)
-
-lb2 = Label(wd, text="Enter the comment character(s) of your document")
-lb2.grid(column = 0, row = 2, sticky = W)
-txt = Entry(wd, width=3)
-txt.grid(column=1, row=2, sticky = W)
-
-
-lb3 = Label(wd, text="Do you want to create a txt file with the documentation?")
-lb3.grid(column = 0, row = 4, sticky = W)
-
-selected = BooleanVar()
-rad1 = Radiobutton(wd, text = "Yes", value = True, variable = selected)
-rad2 = Radiobutton(wd, text = "No", value = False, variable = selected)
-rad1.grid(column=1, row = 4, sticky = W)
-rad2.grid(column=2, row = 4, sticky = W)
-
-def letsgo():
-    commentChars = txt.get()
-    if not selected:
-        info = docu(fn, commentChars)
-        summarise(info)
-    else:
-        print("New file to be created...")
-        global sn
-        sn = fn + "_summary.txt"
-        s = sn.rsplit(".", 1)
-        num = 1
-        while os.path.exists(sn):
-            sn = s[0] + "(" + str(num) + ")." + s[1]
-            num = num + 1
-        print(sn)
-        info = docuFile(fn, commentChars, sn)
-        summariseFile(info)
-
-
-btnGo = Button(wd, text = "Go", command = letsgo)
-btnGo.grid(column=0, row=6, sticky = W)
-
+    
 # f: docu
 # d: Summarises the selected document
-# p: filename, comment character(s) 
 # c: O(n)
 # o: a list with the number of lines and number of documented functions
-def docu(fileName, cc):
-    f = open(fileName, "r")
-    ccl = len(cc)
-    ccl3 = ccl+3
+def docu():
     line = 1
     numFunc = 0
-    
+    ccl3 = ccl+3
     print("--- Functions ---")
     for x in f:                                         # Check every line in the document
         x = x.strip()                                   # Removes whitespaces
         if len(x) > 1:
-            if (x[:ccl] == cc):                         # Checks for comments using the specified comment character(s)
+            if (x[:ccl] == commentChars):               # Checks for comments using the specified comment character(s)
                 if ('f:' in x[:(ccl3)]):                # Function description
                     print("\nLine " + str(line) + ":" + x[(ccl3):])
                     numFunc = numFunc+1
@@ -104,21 +39,17 @@ def docu(fileName, cc):
 
 # f: docuFile
 # d: Like "docu()" but writes to a file instead
-# p: filename, comment character(s), name of new file 
 # e: Only runs when user has selected to get a file output from the program
-def docuFile(fileName, cc, sn):
-    f = open(fileName, "r")
+def docuFile():
     nfD = open(sn,"w+")
-    ccl = len(cc)
-    ccl3 = ccl+3
     line = 1
     numFunc = 0
-    
+    ccl3 = ccl+3
     nfD.write("--- Functions ---")
     for x in f:                                         # Check every line in the document
         x = x.strip()                                   # Removes whitespaces
         if len(x) > 1:
-            if (x[:ccl] == cc):                         # Checks for comments using the specified comment character(s)
+            if (x[:ccl] == commentChars):               # Checks for comments using the specified comment character(s)
                 if ('f:' in x[:(ccl3)]):                # Function description
                     nfD.write("\nLine " + str(line) + ":" + x[(ccl3):] + "\n")
                     numFunc = numFunc+1
@@ -158,4 +89,34 @@ def summariseFile(info):
     nfS.write("Number of documented functions: " + str(info[1]) + "\n")
     nfS.close
 
-wd.mainloop()
+
+if __name__ == '__main__': 
+    print("Welcome, this tool will help you to quickly generate a short summary of your programs.")
+
+    fileName = input("Please enter the search path of your file (including file ending): ")
+    f = open(fileName, "r")
+    
+    commentChars = input("Please enter the comment character(s) of your document: ")
+    ccl = len(commentChars)     # The number of comment characters
+
+    newFile = input("Do you want to create a document file? (y/n): ")
+    if ((newFile == 'y') | (newFile == 'Y')):
+        sn = fileName + "_summary.txt"
+        s = sn.rsplit(".", 1)
+        num = 1
+        while os.path.exists(sn):
+            sn = s[0] + "(" + str(num) + ")." + s[1]
+            num = num + 1
+
+        infoF = docuFile()
+        summariseFile(infoF)
+    else:
+        info = docu()               # Document the code
+        summarise(info)             # Summarise the document
+
+
+### For testing ###
+# f: nothingFunc ***TEST***
+# d: Function that does nothing
+# p: None
+#c: O(1)
