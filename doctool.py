@@ -19,9 +19,6 @@ wd = Tk()
 wd.title("doctool")
 wd.geometry('360x80')
 
-# f: pupres
-# d: Makes a popup window with the result (if you choose to not print the output)
-
 lb1 = Label(wd, text="Please select which file you want to document", anchor="nw")
 lb1.grid(column = 0, row = 0, sticky = W)
 
@@ -56,43 +53,8 @@ def letsgo():
 
     messagebox.showinfo("Info", "Output file created in same folder as source file.")
 
-
 btnGo = Button(wd, text = "Go", command = letsgo)
 btnGo.grid(column=0, row=6, sticky = W)
-
-# f: docu
-# d: Summarises the selected document
-# p: filename, comment character(s) 
-# c: O(n)
-# o: a list with the number of lines and number of documented functions
-def docu(fileName, cc):
-    f = open(fileName, "r")
-    ccl = len(cc)
-    ccl3 = ccl+3
-    line = 1
-    numFunc = 0
-    
-    print("--- Functions ---")
-    for x in f:                                         # Check every line in the document
-        x = x.strip()                                   # Removes whitespaces
-        if len(x) > 1:
-            if (x[:ccl] == cc):                         # Checks for comments using the specified comment character(s)
-                if ('f:' in x[:(ccl3)]):                # Function description
-                    print("\nLine " + str(line) + ":" + x[(ccl3):])
-                    numFunc = numFunc+1
-                elif ('d:' in x[:(ccl3)]):             # Description of the function
-                    print("Despcription:" + x[(ccl3):])
-                elif ('p:' in x[:(ccl3)]):             # Params
-                    print("Parameters: " + x[(ccl3):])
-                elif ('c:' in x[:(ccl3)]):             # Complexity
-                    print("Complexity: " + x[(ccl3):])
-                elif ('o:' in x[:(ccl3)]):             # Output
-                    print("Output: " + x[(ccl3):])
-                elif ('e:' in x[:(ccl3)]):             # Extra info
-                    print("Extra info: " + x[(ccl3):])
-                
-        line = line + 1
-    return [line, numFunc]
 
 # f: docuFile
 # d: Like "docu()" but writes to a file instead
@@ -128,18 +90,6 @@ def docuFile(fileName, cc, sn):
         line = line + 1
     nfD.close
     return [line, numFunc]
-
-# f: summarise
-# d: Summarises the document in a very basic way. Has to be run _after_ "docu()"
-# p: info - a list with the info gathered from "docu()"
-# c: O(1)
-# o: None
-# e: Can't be run alone in order to keep the complexity down (Counting number of lines is O(n) and is already done once)
-def summarise(info):
-    print("\n--- Summary ---")                            # Print summary
-    print("Number of lines: " + str(info[0]))
-    print("Number of documented functions: " + str(info[1]))
-    print("--- END OF OUTPUT ---")
 
 # f: summariseFile
 # d: like "summarise" but instead appends results to a file
