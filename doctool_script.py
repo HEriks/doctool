@@ -2,7 +2,6 @@ import sys
 import os
 from tkinter import *
 from tkinter import filedialog
-from tkinter import messagebox
 from tkinter.ttk import *
 
 # Explanation of keycharacters:
@@ -17,7 +16,7 @@ from tkinter.ttk import *
 #Create the window and GUI elements
 wd = Tk()
 wd.title("doctool")
-wd.geometry('360x80')
+wd.geometry('450x100')
 
 # f: pupres
 # d: Makes a popup window with the result (if you choose to not print the output)
@@ -35,26 +34,40 @@ def browse():
 btn = Button(wd, text = "Browse", command = browse)
 btn.grid(column = 1, row = 0, sticky = W)
 
-lb2 = Label(wd, text="Enter the comment character(s) of your document: ")
+lb2 = Label(wd, text="Enter the comment character(s) of your document")
 lb2.grid(column = 0, row = 2, sticky = W)
 txt = Entry(wd, width=3)
 txt.grid(column=1, row=2, sticky = W)
 
+
+lb3 = Label(wd, text="Do you want to create a txt file with the documentation?")
+lb3.grid(column = 0, row = 4, sticky = W)
+
+# Radio buttons for selecting whether to print the result or create and output file
+selected = BooleanVar()
+rad1 = Radiobutton(wd, text = "Yes", value = True, variable = selected)
+rad2 = Radiobutton(wd, text = "No", value = False, variable = selected)
+rad1.grid(column=1, row = 4, sticky = W)
+rad2.grid(column=2, row = 4, sticky = W)
+
 # f: letsgo
 # d: Runs the program with the GUI
 def letsgo():
+    sct = selected.get()
     commentChars = txt.get()
-    global sn
-    sn = fn + "_summary.txt"
-    s = sn.rsplit(".", 1)
-    num = 1
-    while os.path.exists(sn):
-        sn = s[0] + "(" + str(num) + ")." + s[1]
-        num = num + 1
-    info = docuFile(fn, commentChars, sn)
-    summariseFile(info)
-
-    messagebox.showinfo("Info", "Output file created in same folder as source file.")
+    if not sct:
+        info = docu(fn, commentChars)
+        summarise(info)
+    else:
+        global sn
+        sn = fn + "_summary.txt"
+        s = sn.rsplit(".", 1)
+        num = 1
+        while os.path.exists(sn):
+            sn = s[0] + "(" + str(num) + ")." + s[1]
+            num = num + 1
+        info = docuFile(fn, commentChars, sn)
+        summariseFile(info)
 
 
 btnGo = Button(wd, text = "Go", command = letsgo)
@@ -139,7 +152,6 @@ def summarise(info):
     print("\n--- Summary ---")                            # Print summary
     print("Number of lines: " + str(info[0]))
     print("Number of documented functions: " + str(info[1]))
-    print("--- END OF OUTPUT ---")
 
 # f: summariseFile
 # d: like "summarise" but instead appends results to a file
